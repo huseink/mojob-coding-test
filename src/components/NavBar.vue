@@ -1,10 +1,8 @@
 <template>
   <div>
     <b-navbar variant="faded" type="light">
-      <b-navbar-brand>
-        <router-link to="/">
-          <img src="../assets/mojob_logo.svg" alt="Mojob Logo" width="130" />
-        </router-link>
+      <b-navbar-brand to="/" class="m-0">
+        <img src="../assets/mojob_logo.svg" alt="Mojob Logo" width="130" />
       </b-navbar-brand>
       |
       <b-navbar-nav>
@@ -15,9 +13,9 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .active {
-  color: #46bbb3!important;
-  font-weight: 600!important;
+  color: #46bbb3 !important;
+  font-weight: 600 !important;
 }
 </style>
