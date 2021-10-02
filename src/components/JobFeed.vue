@@ -1,26 +1,19 @@
 <template>
   <div class="job-feed">
-    <b-container>
-      <JobFilter/>
-      <JobCard/>
-      <JobCard/>
-      <JobCard/>
-      <JobCard/>
-      <JobCard/>
-    </b-container>
+    <div v-for="job in jobListings" :key="job.id">
+      <job-card :jobListing="job" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { JobListing, PositionFunction } from '@/models/models';
-import JobCard from '@/components/JobCard.vue';
-import JobFilter from '@/components/JobFilter.vue';
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { JobListing, PositionFunction } from "@/models/models";
+import JobCard from "@/components/JobCard.vue";
 
 @Component({
   components: {
     JobCard,
-    JobFilter,
   },
 })
 export default class JobFeed extends Vue {
@@ -30,12 +23,3 @@ export default class JobFeed extends Vue {
   private positionFunctions!: PositionFunction[];
 }
 </script>
-
-<style scoped>
-.job-feed {
-  background-color: #fafdfd;
-}
-.container {
-  padding: 2rem 0;
-}
-</style>
