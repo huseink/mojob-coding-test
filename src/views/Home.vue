@@ -5,11 +5,15 @@
         :selectedPaginationFilter="selectedPaginationFilter"
         @on-pagination-change="handlePaginationChange"
       />
-      <job-feed
-        v-if="jobListings.length > 0"
-        :job-listings="jobListings"
-        :position-functions="positionFunctionFilters"
-      />
+      <div v-if="jobListings.length > 0">
+        <job-feed
+          :job-listings="jobListings"
+          :position-functions="positionFunctionFilters"
+        />
+      </div>
+      <div v-else>
+        <b-spinner></b-spinner>
+      </div>
     </b-container>
   </div>
 </template>
@@ -86,6 +90,7 @@ export default class Home extends Vue {
   }
 
   private async fetchJobListings(api: BaseApi, pagination: Pagination) {
+    this.jobListings = [];
     if (pagination.use_pagination) {
       const jobListingsResponsePage: IPage<JobListing> =
         await api.getPagedJobListings(pagination);
