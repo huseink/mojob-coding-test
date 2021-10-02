@@ -5,7 +5,7 @@
       text="Filter By Position"
       class="m-md-2"
       variant="outline-dark"
-      lazy="true"
+      :lazy="true"
     >
       <b-dropdown-item>First Action</b-dropdown-item>
     </b-dropdown>
@@ -14,7 +14,7 @@
       text="5 Per Page"
       class="m-md-2"
       variant="outline-dark"
-      lazy="true"
+      :lazy="true"
     >
       <b-dropdown-item>First Action</b-dropdown-item>
     </b-dropdown>
