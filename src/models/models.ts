@@ -146,10 +146,10 @@ export interface JobListing {
 // when the job address is set. If you want to read more about them
 // https://developers.google.com/maps/documentation/geocoding/overview
 export enum jobLocationType {
-  country_long_name = 'country_long_name',
-  administrative_area_level_1 = 'administrative_area_level_1',
-  administrative_area_level_2 = 'administrative_area_level_2',
-  postal_town = 'postal_town',
+  country_long_name = "country_long_name",
+  administrative_area_level_1 = "administrative_area_level_1",
+  administrative_area_level_2 = "administrative_area_level_2",
+  postal_town = "postal_town",
 }
 
 export interface JobLocation {
@@ -256,4 +256,10 @@ export interface JobListingUnitDescription {
   subtitle_rich?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface Pagination {
+  page_size?: number;
+  use_pagination?: boolean;
+  text?: string;
 }
