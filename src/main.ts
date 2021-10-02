@@ -4,6 +4,7 @@ import './registerServiceWorker';
 import router from './router';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import moment from 'moment';
 import { BootstrapVue } from 'bootstrap-vue'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
@@ -11,6 +12,13 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false;
+
+Vue.filter('formatDate', (value: Date) => {
+  if (value) {
+    return moment(String(value)).format('DD MMM YYYY')
+  }
+})
+
 Vue.use(VueAxios, axios);
 // Make BootstrapVue available throughout the project
 Vue.use(BootstrapVue)
