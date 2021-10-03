@@ -2,17 +2,15 @@
   <div class="home">
     <b-container>
       <job-filter
+        v-if="positionFunctionFilters.length > 0"
+        :position-functions="positionFunctionFilters"
         :selectedPaginationFilter="selectedPaginationFilter"
         @on-pagination-change="handlePaginationChange"
+        @on-position-function-select="handlePositionFunctionSelect"
+        @on-position-function-de-select="handlePositionFunctionDeSelect"
       />
       <div v-if="jobListings.length > 0">
-        <job-feed
-          :job-listings="jobListings"
-          :position-functions="positionFunctionFilters"
-        />
-      </div>
-      <div v-else>
-        <b-spinner></b-spinner>
+        <job-feed :job-listings="jobListings" />
       </div>
     </b-container>
   </div>
@@ -40,6 +38,7 @@ export default class Home extends Vue {
   private mojobApi: BaseApi | null = null;
   private positionFunctionFilters: PositionFunction[] = [];
   private jobListings: JobListing[] = [];
+  private positionFunctionIds: Number[] = [];
 
   private selectedPaginationFilter: Pagination = {
     page_size: 5,
@@ -47,18 +46,7 @@ export default class Home extends Vue {
     use_pagination: true,
   };
 
-  /**
-   * Here you can do necessary request to our
-   * public test-API in order to retrieve a list of job listings and a list of
-   * position function filters.
-   *
-   * You can test the endpoints and see the documentation at:
-   * https://test-api.mojob.io/public/docs/
-   *
-   * @private
-   */
   private async mounted() {
-    // Here is an example on how to retrieve job position function filters
     this.mojobApi = new BaseApi(
       "https://test-api.mojob.io/public/",
       this.axios
@@ -71,10 +59,45 @@ export default class Home extends Vue {
     }
   }
 
+  // Fires when page size is changed from pagination filter menu
   private handlePaginationChange(pagination: Pagination) {
     this.selectedPaginationFilter = pagination;
     if (this.mojobApi) {
       this.fetchJobListings(this.mojobApi, this.selectedPaginationFilter);
+    }
+  }
+
+  // Fires when a position function is selected from position function filter menu
+  private handlePositionFunctionSelect(positionFunction: PositionFunction) {
+    if (this.mojobApi) {
+      // Push the selected position function id to currenlty selected ids
+      if (positionFunction && positionFunction.id) {
+        this.positionFunctionIds.push(positionFunction.id);
+      }
+      this.fetchJobListings(
+        this.mojobApi,
+        this.selectedPaginationFilter,
+        this.positionFunctionIds
+      );
+    }
+  }
+
+  // Fires when a position function is deselected (removed) from position function filter menu
+  private handlePositionFunctionDeSelect(positionFunction: PositionFunction) {
+    if (this.mojobApi) {
+      // Filter the deselected id from selected position ids array
+      const filteredFunctionIds: Number[] = [];
+      this.positionFunctionIds.forEach((id) => {
+        if (id !== positionFunction.id) {
+          filteredFunctionIds.push(id);
+        }
+      });
+      this.positionFunctionIds = filteredFunctionIds;
+      this.fetchJobListings(
+        this.mojobApi,
+        this.selectedPaginationFilter,
+        filteredFunctionIds
+      );
     }
   }
 
@@ -89,19 +112,28 @@ export default class Home extends Vue {
     }
   }
 
-  private async fetchJobListings(api: BaseApi, pagination: Pagination) {
-    this.jobListings = [];
+  private async fetchJobListings(
+    api: BaseApi,
+    pagination: Pagination,
+    positionFunctionIdsFilter?: Number[]
+  ) {
+    // Fetch with pagination
     if (pagination.use_pagination) {
       const jobListingsResponsePage: IPage<JobListing> =
-        await api.getPagedJobListings(pagination);
-      if (jobListingsResponsePage.results) {
+        await api.getPagedJobListings(pagination, positionFunctionIdsFilter);
+      if (
+        jobListingsResponsePage.results &&
+        jobListingsResponsePage.results.length > 0
+      ) {
         this.jobListings = jobListingsResponsePage.results;
       } else {
         console.log("Failed loading job listings");
       }
     } else {
-      const jobListingsResponse: JobListing[] = await api.getAllJobListings();
-
+      // Fetch without pagination
+      const jobListingsResponse: JobListing[] = await api.getAllJobListings(
+        positionFunctionIdsFilter
+      );
       if (jobListingsResponse && jobListingsResponse.length > 0) {
         this.jobListings = jobListingsResponse;
       } else {
