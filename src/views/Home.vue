@@ -12,6 +12,9 @@
       <div v-if="jobListings.length > 0">
         <job-feed :job-listings="jobListings" />
       </div>
+      <div v-show="loadingData">
+        <b-spinner></b-spinner>
+      </div>
     </b-container>
   </div>
 </template>
@@ -39,6 +42,7 @@ export default class Home extends Vue {
   private positionFunctionFilters: PositionFunction[] = [];
   private jobListings: JobListing[] = [];
   private positionFunctionIds: Number[] = [];
+  private loadingData: Boolean = false;
 
   private selectedPaginationFilter: Pagination = {
     page_size: 5,
@@ -117,6 +121,8 @@ export default class Home extends Vue {
     pagination: Pagination,
     positionFunctionIdsFilter?: Number[]
   ) {
+    this.jobListings = [];
+    this.loadingData = true;
     // Fetch with pagination
     if (pagination.use_pagination) {
       const jobListingsResponsePage: IPage<JobListing> =
@@ -129,6 +135,7 @@ export default class Home extends Vue {
       } else {
         console.log("Failed loading job listings");
       }
+      this.loadingData = false;
     } else {
       // Fetch without pagination
       const jobListingsResponse: JobListing[] = await api.getAllJobListings(
@@ -139,6 +146,7 @@ export default class Home extends Vue {
       } else {
         console.log("Failed loading job listings");
       }
+      this.loadingData = false;
     }
   }
 }
