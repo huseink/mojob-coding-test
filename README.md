@@ -48,8 +48,12 @@ npm install
 ```
 npm run serve
 ```
+### Language
+```
+I have used Typescript.
+```
 
-## ⚠️ 
+## Notes 
 ```
 I have used node version:
 v12.19.0
