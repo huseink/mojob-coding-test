@@ -4,9 +4,9 @@
 * fetch job listings and display them in a job feed
 * create a job position function filter.
 
-All job listings and all job locations can be fetched from our public API.
+All job listings and all job locations can be fetched from Mojob public API.
 
-## Design
+## Design (Task Results)
 
 ### Design 1
 
