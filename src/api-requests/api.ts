@@ -22,19 +22,31 @@ export default class BaseApi {
 
   // Get Job Listings with pagination
   public getPagedJobListings = (
-    pagination: Pagination
+    pagination: Pagination,
+    positionFunctionIds?: Number[]
   ): Promise<IPage<JobListing>> => {
     let queryParameters = "?include_open=False";
+
     queryParameters += `&page_size=${pagination.page_size}&use_pagination=True`;
+
+    if (positionFunctionIds) {
+      queryParameters += `&position_functions=${positionFunctionIds.toString()}`;
+    }
     return this.axios
       .get(`${this.baseUrl}job/listings/${queryParameters}`)
       .then((response) => response.data);
   };
 
   // Get Job Listings without pagination
-  public getAllJobListings = (): Promise<JobListing[]> => {
-    let queryParameters =
-      "?include_open=False&use_pagination=False";
+  public getAllJobListings = (
+    positionFunctionIds?: Number[]
+  ): Promise<JobListing[]> => {
+    let queryParameters = "?include_open=False&use_pagination=False";
+
+    if (positionFunctionIds) {
+      queryParameters += `&position_functions=${positionFunctionIds.toString()}`;
+    }
+
     return this.axios
       .get(`${this.baseUrl}job/listings/${queryParameters}`)
       .then((response) => response.data);
